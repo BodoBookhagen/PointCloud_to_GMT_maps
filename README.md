@@ -1,6 +1,6 @@
 # PointCloud_to_GMT_maps
 
-This document-in-manual-style roughly outlines the steps necessary to take a point cloud, classify it, and display it as a map with GMT. Visualization with GMT includes 2.5D perspective views with points and meshes, but also 2D maps. Emphasis is put on open-source software (with the exception of LAStools that requires a license for full functionality). The following steps are described:
+This document-in-manual-style roughly outlines the steps necessary to take a point cloud, classify it, and display it as a map with GMT: [PDF](docs/From_PC_to_GMT_Maps.pdf). Visualization with GMT includes 2.5D perspective views with points and meshes, but also 2D maps. Emphasis is put on open-source software (with the exception of LAStools that requires a license for full functionality). The following steps are described:
 
 1. Preprocess and classify point-cloud data
     * including preprocessing of SfM pointclouds that are usually noisier than lidar pointclouds
