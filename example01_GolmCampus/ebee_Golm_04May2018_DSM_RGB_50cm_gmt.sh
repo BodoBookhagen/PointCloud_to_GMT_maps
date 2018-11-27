@@ -78,10 +78,10 @@ fi
 POSTSCRIPT1=ebee_Golm_04May2018_DSM_50cm.ps
 DEM_CPT=dem2_color.cpt
 gmt makecpt -N -T65/110/2 -Cdem2 >$DEM_CPT
-gmt grdimage $DEM_GRD -I$DEM_GRD_HS -Jx1:10000 -C$DEM_CPT -R$DEM_GRD -Q -B+t"Campus Golm: eBee May-04-2018 DSM: 50cm" -Xc -Yc -E300 -K >$POSTSCRIPT1
-gmt pscoast -R -Ju33N/1:10000 -N1 -K -O -Df -B0.5mSWne --FONT_ANNOT_PRIMARY=12p --FORMAT_GEO_MAP=ddd:mmF -K >> $POSTSCRIPT1
-gmt psbasemap -R -J -O -K --FONT_ANNOT_PRIMARY=10p -LjLB+c52:53N+f+w0.4k+l1:10,000+u+o0.5c --FONT_LABEL=10p >> $POSTSCRIPT1
-gmt psscale -R -J -DjTRC+o2.5c/0.3c/+w6c/0.3c+h -C$DEM_CPT -I -F+gwhite+r1p+pthin,black -Bx25 -By+lMeter --FONT=12p --FONT_ANNOT_PRIMARY=12p --MAP_FRAME_PEN=1 --MAP_FRAME_WIDTH=0.1 -O -K >> $POSTSCRIPT1
+gmt grdimage $DEM_GRD -I$DEM_GRD_HS -Jx1:12500 -C$DEM_CPT -R$DEM_GRD -Q -B+t"eBee May-04-2018 DSM: 50cm" -Xc -Yc -E300 -K >$POSTSCRIPT1
+gmt pscoast -R -Ju33N/1:12500 -N1 -K -O -Df -B0.5mSWne --FONT_ANNOT_PRIMARY=12p --FORMAT_GEO_MAP=ddd:mmF -K >> $POSTSCRIPT1
+gmt psbasemap -R -J -O -K --FONT_ANNOT_PRIMARY=10p -LjLB+c52:53N+f+w0.4k+l1:12,500+u+o0.5c --FONT_LABEL=10p >> $POSTSCRIPT1
+gmt psscale -R -J -DjTRC+o2.5c/0.3c/+w6c/0.3c+h -C$DEM_CPT -I -F+gwhite+r1p+pthin,black -Bx15 -By+lMeter --FONT=12p --FONT_ANNOT_PRIMARY=12p --MAP_FRAME_PEN=1 --MAP_FRAME_WIDTH=0.1 -O -K >> $POSTSCRIPT1
 #creating map insert
 RANGE=10/14/50/54
 PROJECTION=M2

@@ -5,7 +5,7 @@ author: "Bodo Bookhagen ([bodo.bookhagen@uni-potsdam.de](bodo.bookhagen@uni-pots
 ---
 
 # Outline
-This document-in-manual-style roughly outlines the steps necessary to take a point cloud, classify it, and display it as a map. Emphasis is put on open-source software (with the exception of LAStools that requires a license for full functionality). The following steps are described:
+This document-in-manual-style roughly outlines the steps necessary to take a point cloud, classify it, and display it as a map with GMT. Visualization with GMT includes 2.5D perspective views with points and meshes, but also 2D maps. Emphasis is put on open-source software (with the exception of LAStools that requires a license for full functionality). The following steps are described:
 
 1. Preprocess and classify point-cloud data
     * including preprocessing of SfM pointclouds that are usually noisier than lidar pointclouds
@@ -74,7 +74,7 @@ source activate gmt5-python
 ```
 
 ### GMT v6.x
-**This installs the bleeding edge of GMT: GMT 6. New features, but also some bugs. Certainly easier to use and more powerful for 3D applications.** 
+**This installs the bleeding edge of GMT: GMT 6. New features, but also some bugs. Certainly easier to use.** 
 
 First, make sure your anaconda/miniconda path is included (you will need to adjust this, but most likely your `bin` directory already is added:
 ```
@@ -171,7 +171,7 @@ sudo apt-get -y install gdal-bin gdal-dev
 **Note that for this manual, a working version of gdal is required for some commands**
 
 
-### Compiling GMT 6.x and the most recent developer edition
+### Compiling GMT 6.x and the most recent developer editions
 Likely, it is easiest to install the most recent version from the github repository at [https://github.com/GenericMappingTools/gmt](https://github.com/GenericMappingTools/gmt). There are detailed instruction on how to install GMT. On modern scientific Ubuntu/Linux systems, most of the required packages are installed. Follow these steps to get the most recent GMT version installed. The build process is very similar to the one described above for GMT 5.x. Note that we are installing this into `/usr/local/gmt6`. This will allow you to have two versions (v5.x and v6.x installed simultaneously).
 ```
 cd /usr/local/src
@@ -198,14 +198,10 @@ sudo apt-get -y install gdal-bin gdal-dev
 **Note that for this manual, a working version of gdal is required for some commands**
 
 ### Installing GMT for Python from GitHub
-If you are interested in generating figures and maps directly from numpy arrays, you may want to look into [gmt-python](https://github.com/GenericMappingTools/gmt-python). Please follow the steps described on their webpage or look here [https://www.gmtpython.xyz/latest/install.html](https://www.gmtpython.xyz/latest/install.html). If you are new to python or *nix derivates, I suggest to use anaconda (it's the simplest way to get GMT on your system) - not tested on Window systems yet. If you don't have anaconda/miniconda installed, I suggest you look at [miniconda](https://conda.io/docs/user-guide/install/linux.html). The quick steps to install 64-bit Python 3.7 miniconda on an Ubuntu system are:
-```
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-```
+If you are interested in generating figures and maps directly from numpy arrays, you may want to look into [gmt-python](https://github.com/GenericMappingTools/gmt-python). Please follow the steps described on their webpage or look here [https://www.gmtpython.xyz/latest/install.html](https://www.gmtpython.xyz/latest/install.html). If you are new to python or *nix derivates, I suggest to use anaconda (it's the simplest way to get GMT on your system) - not tested on Window systems yet. If you don't have anaconda/miniconda installed, I suggest you look at [miniconda](https://conda.io/docs/user-guide/install/linux.html) and then run `bash Miniconda3-latest-Linux-x86_64.sh`.
 
 
-First, make sure your anaconda/miniconda path is included (you will need to adjust this, but most likely your `miniconda3/bin` directory already is added:
+First, make sure your anaconda/miniconda path is included (you will need to adjust this, but most likely your `bin` directory already is added:
 ```
 export PATH=/home/bodo/miniconda3/bin:$PATH
 ```
@@ -263,7 +259,7 @@ UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","32633"]]"
 362150 5808400
 ' > Haus27_29_coordinates_UTM33N_WGS84.gmt
 ```
-This may look cryptic and cumbersome to you, but this method is highly flexible and can be automatized. The PROJCS string for example can be generated from `gdalsrsinfo epsg:32633`. 
+This may look cryptic and cumbersome to you, but this method is highly flexible. The PROJCS string for example can be generated from `gdalsrsinfo epsg:32633`. 
 
 Next, this gmt file can be converted  to a shapefile using `ogr2ogr`:
 ```
@@ -278,7 +274,7 @@ wine /opt/LAStools/bin/lasclip.exe \
     -i sodaall_1stproc_densecloud_wgs84_UTM33N.laz \
     -olaz -o  Golm_H27_29.laz
 ```
-Note, here I am running lasclip through the [wine emulator](https://www.winehq.org/) on the Ubuntu command line. If you run this on a native Windows OS system, you will only need lasclip.exe (assuming you have set the proper $path). The input pointcloud is `sodaall_1stproc_densecloud_wgs84_UTM33N.laz` that is not provided for this tutorial (because it's 1.2 GB large with 120'414'200 points).
+Note, here I am running lasclip through the [wine emulator](https://www.winehq.org/) on the Ubuntu command line. If you run this on a native Windows OS system, you will only need lasclip.exe (assuming you have set the proper path). The input pointcloud is `sodaall_1stproc_densecloud_wgs84_UTM33N.laz` that is not provided for this tutorial (because it's 1.2 GB large with 120'414'200 points).
 
 We will continue to work with `Golm_H27_29.laz` in the rest of this tutorial. This file is also provided on the github page.
 
@@ -373,7 +369,7 @@ This point cloud does not contain any subsurface points and can be used for furt
 However, you can also just ignore class 7 in the next processing steps - there is no need to generate a separated, no-noise LAZ file (but it's nice to have).
 
 
-## LASTools: Perform a ground classification of the denoised point cloud: lasground
+## Perform a ground classification of the denoised point cloud: lasground
 Now we can perform a ground classification ignoring the noise points (class 7):
 ```
 wine /opt/LAStools/bin/lasground.exe -ignore_class 7 -compute_height \
@@ -389,7 +385,7 @@ wine /opt/LAStools/bin/lasground.exe -compute_height -ultra_fine \
     -o Golm_H27_29_50cm_g.laz
 ```
 
-## PDAL: Perform a ground classification of the denoised point cloud using SMRF
+## Perform a ground classification of the denoised point cloud: pdal and SMRF
 Instead of using [lasground](https://rapidlasso.com/lastools/lasground/), you can rely on the [SMRF filter](https://pdal.io/stages/filters.smrf.html) implemented in pdal. The Simple Morphological Filter is described in scientific publications and works well for SfM pointclouds. In the following example, we also ignore the previously identified noise points (so we could also use Golm_H27_29_50cm_thinned_isolated_temp_ground_denoised_cl.laz as an input file):
 
 ```
@@ -422,7 +418,7 @@ pdal translate Golm_H27_29_50cm.laz \
 ```
 However, you will not achieve the same results as the lasthin approach described above that explicitly removes points below a ground-classified surface. These steps can be performed pdal as well but are more extensive and not described in this approach. Also, the classification of vegetation and buildings (see next step) is possible in pdal, but requires additional steps and fine tuning that is not described in this manual.
 
-## LASTools: Perform a vegetation classification of the ground-classified point cloud
+## Perform a ground classification of the denoised point cloud: pdal and SMRF
 Next, we generated vegetation and building classes using [lasclassify](https://rapidlasso.com/lastools/lasclassify/) with a curvature-based classification approach:
 ```
 wine /opt/LAStools/bin/lasclassify.exe \
@@ -439,7 +435,7 @@ The RGB image shows the color information stored in the RGB attributes (Figure \
 ![Side view of Haus 27 with RGB colors.\label{Fig:H27_RGB}](figs/H27_RGB.png)
 
 
-## LASTools: Grid the classified point cloud to a DSM (Digital Surface Model) and DTM (Digital Terrain Model)
+## Grid the classified point cloud to a DSM (Digital Surface Model) and DTM (Digital Terrain Model)
 As a next step, you can create a gridded DTM of the data using the classified ground points from class 2 carried out in the previous steps (note that we interpolate this to 1m here):
 ```
 wine /opt/LAStools/bin/blast2dem.exe -keep_class 2 \
@@ -556,16 +552,7 @@ We first define an output filename FN0 and then call `gmt plot3d` on the file Go
 
 ![Perspective view of a point cloud using `gmt plot3d`.\label{Fig:ebee_Golm_H27_04May2018_50cm_plot3d_black}](figs/ebee_Golm_H27_04May2018_50cm_plot3d_black.png)
 
-**Note: These csv files containing point clouds tend to have large file sizes and it will be more useful to work with a zip'ed, gzip'ed, or bzip2'ed version of that file. For example, you can pipe the output from gzip directly to plot3d. See below for an example**
-
-In order to use compressed csv/txt files, use [gzip](https://www.gzip.org/) (or [bzip2](http://www.bzip.org/) - it has more effective compression) and pipe the output into `gmt plot3d`:
-```
-gzip -dc Golm_H27_29_soda_04May2018_UTM33N_WGS84_50cm_gc_XYZcRGB.csv.gz | gmt plot3d Golm_H27_29_soda_04May2018_UTM33N_WGS84_50cm_gc_XYZcRGB.csv -p165/40 -Sc0.01 -JX8c -JZ3c -R362150/362400/5808400/5808600/65/85 -Xc -Yc -png $FN0
-```
-In the following examples, we will continue to use the plain-text version, but you can substitute the pipe for all examples. Where appropriate, there will be additional examples given.
-
-
-Next, we would like to add colors to these points. For example, we can color the points by their elevation. In order to do this, we will need to filter the input csv file and extract the columns X, Y, Z, and add the color information into the fourth column. [gmt select](http://gmt.soest.hawaii.edu/doc/latest/gmtselect.html) allows to perform table operations and we can just tell gmt select to extract the X, Y, Z columns (col 0-2) and add the Z elevation (col 2) again:
+But we would like to add colors to these points. For example, we can color the points by their elevation. In order to do this, we will need to filter the input csv file and extract the columns X, Y, Z, and add the color information into the fourth column. [gmt select](http://gmt.soest.hawaii.edu/doc/latest/gmtselect.html) allows to perform table operations and we can just tell gmt select to extract the X, Y, Z columns (col 0-2) and add the Z elevation (col 2) again:
 ```
 gmt select -i0:2,2 Golm_H27_29_soda_04May2018_UTM33N_WGS84_50cm_gc_XYZcRGB.csv
 ```
@@ -583,7 +570,7 @@ gmt select -i0:2,2 Golm_H27_29_soda_04May2018_UTM33N_WGS84_50cm_gc_XYZcRGB.csv |
 
 The output figure contains an oblique view of building 27 and 29 with points colored by their elevation (Figure \ref{Fig:ebee_Golm_H27_04May2018_50cm_plot3d_elevation}).
 
-Next, we can also show the point cloud with colors from the classification (see previous section). We have to define a colorscale (`categorical`) and use column 3 to display colors. Here we use the option `-a3` to identify the third column to be the column containing the integer point-cloud class (columns start counting at 0 with X coordinates, followed by column 1 with Y coordinates).
+Next, we can also show the point cloud with colors from the classification (see previous section). We have to define a colorscale (`categorical`) and use column 3 to display colors. Here we use the option `-a3` to identify the third column to be the column containing the integer class (columns start counting at 0 with X coordinates, followed by column 1 with Y coordinates).
 
 ```
 FN2=ebee_Golm_H27_04May2018_50cm_plot3d_class
@@ -677,14 +664,14 @@ gmt psconvert $POSTSCRIPT1 -A -Tf
 This generates a map view with title of the DSM (Figure \ref{Fig:ebee_Golm_04May2018_DSM_50cm}). 
 
 
-## Generate an overview map with length scale, color bar, and lat/long grid
+## Generate a overview map with length scale, color bar, and lat/long grid
 A more complex map with lat/long grid, length scale, and colorbar can be plotted with:
 ```
 DEM_CPT=dem2_color.cpt
 gmt makecpt -N -T65/110/2 -Cdem2 >$DEM_CPT
 gmt grdimage $DEM_GRD -I$DEM_GRD_HS -Jx1:10000 \
     -C$DEM_CPT -R$DEM_GRD -Q \
-    -B+t"eBee May-04-2018 DSM: 50cm" \
+    -B+t"Campus Golm: eBee May-04-2018 DSM: 50cm" \
     -Xc -Yc -E300 -K >$POSTSCRIPT1
 gmt pscoast -R -Ju33N/1:10000 -N1 -K -O \
     -Df -B0.5mSWne \
@@ -697,7 +684,7 @@ gmt psbasemap -R -J -O -K \
 gmt psscale -R -J \
     -DjTRC+o2.5c/0.3c/+w6c/0.3c+h \
     -C$DEM_CPT -I -F+gwhite+r1p+pthin,black \
-    -Bx20 -By+lMeter --FONT=12p \
+    -Bx25 -By+lMeter --FONT=12p \
     --FONT_ANNOT_PRIMARY=12p \
     --MAP_FRAME_PEN=1 \
     --MAP_FRAME_WIDTH=0.1 \
@@ -762,9 +749,9 @@ gmt grdview -p170/30 $DEM_GRD -Jx1:4000 \
 convert -quality 100 -density 300 $POSTSCRIPT3 ${POSTSCRIPT3::-3}.png
 ```
 
-![Perspective view using a image draped over the DSM of the campus Golm based on a DSM with spatial resolution of 50cm. For a higher-quality rendered mesh, see Figure \ref{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_surface}.\label{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_image}](figs/ebee_Golm_04May2018_DSM_50cm_grdview_image.png)
+![Perspective view using a image draped over the DSM of the campus Golm based on a DSM with spatial resolution of 50cm.\label{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_image}](figs/ebee_Golm_04May2018_DSM_50cm_grdview_image.png)
 
-An alternative option is to use a surface mesh. This provides higher resolution, but usually takes longer to render. Only the option `-Qs` changes (see Figure \ref{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_surface})
+An alternative option is to use a surface mesh. This provides higher resolution, but usually takes longer to render. Only the option `-Qs` changes (see Figure\ref{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_surface})
 
 ```
 POSTSCRIPT4=ebee_Golm_04May2018_DSM_50cm_grdview_surface.ps
@@ -774,7 +761,7 @@ gmt grdview -p170/30 $DEM_GRD -Jx1:4000 -JZ3c -I$DEM_GRD_HS -G$DEM_GRD -C$DEM_CP
 convert -quality 100 -density 300 $POSTSCRIPT4 ${POSTSCRIPT4::-3}.png
 ```
 
-![Perspective view using a surface mesh of the campus Golm based on a DSM with spatial resolution of 50cm. Note that this rendered view is of higher quality than the draped image shown in Figure \ref{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_image}. \label{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_surface}](figs/ebee_Golm_04May2018_DSM_50cm_grdview_surface.png)
+![Perspective view using a surface mesh of the campus Golm based on a DSM with spatial resolution of 50cm.\label{Fig:ebee_Golm_04May2018_DSM_50cm_grdview_surface}](figs/ebee_Golm_04May2018_DSM_50cm_grdview_surface.png)
 
 ## Generating an oblique view of a grid (2.5D) of the Golm campus area with orthophotos
 (NOT WORKING YET)
