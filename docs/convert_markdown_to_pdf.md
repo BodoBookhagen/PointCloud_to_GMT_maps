@@ -7,3 +7,5 @@ d=$(date +%Y-%m-%d)
 pandoc --number-sections --listings -H auto_linebreak_listings.tex \
     --variable papersize=a4paper --variable urlcolor=cyan \
     -s From_PC_to_GMT_Maps.md -o From_PC_to_GMT_Maps_${d}.pdf
+
+cp From_PC_to_GMT_Maps_${d}.pdf From_PC_to_GMT_Maps.pdf
